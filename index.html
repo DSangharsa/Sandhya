@@ -28,13 +28,14 @@ body {
   position: relative;
 }
 
-/* 💕 Floating Hearts Background */
+/* 💕 Floating Hearts */
 .hearts-bg {
   position: fixed;
   inset: 0;
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
+  transition: opacity 1.2s ease;
 }
 
 .heart {
@@ -42,18 +43,12 @@ body {
   bottom: -20px;
   font-size: 20px;
   animation: floatUp linear infinite;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 @keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-110vh) scale(1.5);
-    opacity: 0;
-  }
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-110vh) scale(1.4); opacity: 0; }
 }
 
 /* 🌸 Main Content */
@@ -63,6 +58,13 @@ body {
   text-align: center;
   position: relative;
   z-index: 2;
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
 }
 
 h1 {
@@ -72,15 +74,15 @@ h1 {
 
 h4 {
   color: #555;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 /* 💡 Flip Hint */
 .flip-hint {
   font-size: 0.9rem;
   color: var(--dark-pink);
-  opacity: 0.35;
-  margin-bottom: 15px;
+  opacity: 0.45;
+  margin-bottom: 18px;
   animation: hintFloat 2.5s ease-in-out infinite;
 }
 
@@ -90,24 +92,12 @@ h4 {
   100% { transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
-  .flip-hint::after {
-    content: " (tap to flip 💕)";
-  }
-}
-
-@media (min-width: 769px) {
-  .flip-hint::after {
-    content: " (hover to flip 💕)";
-  }
-}
-
 /* 💖 Cards */
 .cards-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
 }
 
 .card {
@@ -150,31 +140,37 @@ h4 {
   transform: rotateY(180deg);
 }
 
-/* 🌹 Question Section */
+/* 🌱 Honesty Card */
+.honesty {
+  max-width: 620px;
+  margin: 0 auto 40px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 20px;
+  padding: 26px 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.7;
+  position: relative;
+  animation: fadeUp 1.2s ease;
+}
+
+.honesty::before {
+  content: "“";
+  position: absolute;
+  top: -18px;
+  left: 18px;
+  font-size: 3rem;
+  color: var(--pink);
+  opacity: 0.4;
+}
+
+/* 🌹 Question */
 .question {
   background: white;
   border-radius: 25px;
   padding: 40px 20px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  position: relative;
-  overflow: hidden;
-}
-
-.question::before,
-.question::after {
-  content: "🌹🌹🌹";
-  position: absolute;
-  font-size: 1.6rem;
-}
-
-.question::before {
-  top: 10px;
-  left: 10px;
-}
-
-.question::after {
-  bottom: 10px;
-  right: 10px;
 }
 
 .question h2 {
@@ -196,34 +192,62 @@ h4 {
 
 button {
   border: none;
-  padding: 14px 22px;
+  padding: 14px 24px;
   border-radius: 30px;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
+/* 💓 YES Pulse */
 #yesBtn {
   background: var(--pink);
   color: white;
+  animation: pulse 2.5s ease-in-out infinite;
 }
 
-#noBtn {
-  background: #ddd;
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
-/* 💌 Message */
-#message {
-  display: none;
-  margin-top: 30px;
-  font-size: 1.4rem;
+#cuteNoBtn {
+  background: #f2f2f2;
+  color: #666;
+}
+
+/* 🎬 Final Screen */
+.final-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 230, 235, 0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease;
+  z-index: 5;
+}
+
+.final-screen.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.final-message {
+  max-width: 600px;
+  font-size: 1.3rem;
   color: var(--dark-pink);
-  animation: pop 0.6s ease;
+  line-height: 1.6;
+  animation: fadeUp 1.5s ease;
 }
 
-@keyframes pop {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* 📱 Mobile */
@@ -236,24 +260,23 @@ button {
 
 <body>
 
-<!-- 💕 Floating Hearts -->
 <div class="hearts-bg" id="heartsBg"></div>
 
-<div class="container">
+<div class="container" id="mainContent">
 
-  <h1>Happy Valentine’s Day, Sandhya! 💘</h1>
-  <h4>I have something special to ask you…</h4>
+  <h1>Happy Valentine’s Day, Sandhya 💘</h1>
+  <h4>I wanted to say something… honestly.</h4>
 
-  <div class="flip-hint">✨ Little secret</div>
+  <div class="flip-hint">↺ Tap the cards to flip them 💕</div>
 
   <div class="cards-wrapper">
     <div class="card">
       <div class="card-inner">
         <div class="card-face card-front">
-          <h2>You're Amazing 💖</h2>
+          <h2>You’re Amazing 💖</h2>
         </div>
         <div class="card-face card-back">
-          <p>Your smile lights up my entire world ✨</p>
+          <p>Your smile genuinely makes things feel lighter ✨</p>
         </div>
       </div>
     </div>
@@ -264,70 +287,98 @@ button {
           <h2>You Make Me Happy 💖</h2>
         </div>
         <div class="card-face card-back">
-          <p>Every moment with you feels precious 💕</p>
+          <p>Talking to you has become one of my favorite parts of the day 💕</p>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="honesty">
+    I don’t know exactly where this goes yet.<br />
+    But I do know I enjoy talking to you,<br />
+    and I care more than I expected.
+  </div>
+
   <div class="question">
-    <h2>Will You Be My Valentine? 💝</h2>
-    <p>In a world full of people, you’re the only one I notice 🥺</p>
+    <h2>Would you like to make this Valentine’s Day a little special? 💝</h2>
+    <p>In a world full of people, you’re the only one I notice.</p>
 
     <div class="buttons">
-      <button id="yesBtn">Yes, I'll Be Your Valentine!</button>
-      <button id="noBtn">No</button>
-    </div>
-
-    <div id="message">
-      Thank you 💖 You just made me the happiest person ever! 🥰🌹
+      <button id="yesBtn">Yes 💖</button>
+      <button id="cuteNoBtn">Hmm… not yet 🐣</button>
     </div>
   </div>
 
 </div>
 
-<script>
-/* 💕 Floating Hearts Generator */
-const heartsBg = document.getElementById("heartsBg");
+<div class="final-screen" id="finalScreen">
+  <div class="final-message" id="finalMessage"></div>
+</div>
 
+<script>
+/* 💕 Hearts */
+const heartsBg = document.getElementById("heartsBg");
 function createHeart() {
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerHTML = "💖";
   heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration = 4 + Math.random() * 3 + "s";
+  heart.style.animationDuration = 5 + Math.random() * 3 + "s";
   heartsBg.appendChild(heart);
-
-  setTimeout(() => heart.remove(), 7000);
+  setTimeout(() => heart.remove(), 8000);
 }
-setInterval(createHeart, 450);
+setInterval(createHeart, 600);
 
-/* 💡 Auto-hide flip hint */
+/* Hide flip hint */
 setTimeout(() => {
   const hint = document.querySelector(".flip-hint");
   if (hint) hint.style.opacity = "0";
 }, 7000);
 
-/* 😈 Button Logic */
-let yesBtn = document.getElementById("yesBtn");
-let noBtn = document.getElementById("noBtn");
-let message = document.getElementById("message");
-let yesScale = 1;
+/* 🎬 Button Logic */
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("cuteNoBtn");
+const mainContent = document.getElementById("mainContent");
+const finalScreen = document.getElementById("finalScreen");
+const finalMessage = document.getElementById("finalMessage");
 
-yesBtn.addEventListener("click", () => {
-  message.style.display = "block";
-  yesBtn.style.display = "none";
-  noBtn.style.display = "none";
-});
+let yesScale = 1;
+let noClicks = 0;
+
+const noTexts = [
+  "Hmm… not yet 🐣",
+  "Are you sure? 👀",
+  "Still thinking? 😳",
+  "Okay but… look at YES 🥺",
+  "You know you want to 😌"
+];
 
 noBtn.addEventListener("click", () => {
-  yesScale += 0.3;
+  noClicks++;
+  yesScale += 0.22;
   yesBtn.style.transform = `scale(${yesScale})`;
 
-  if (yesScale > 2.2) {
+  if (noClicks < noTexts.length) {
+    noBtn.textContent = noTexts[noClicks];
+  }
+
+  if (yesScale > 2.1) {
     noBtn.style.display = "none";
     yesBtn.textContent = "Okay okay… YES 💖";
   }
+});
+
+yesBtn.addEventListener("click", () => {
+  mainContent.classList.add("fade-out");
+  heartsBg.style.opacity = "0.4";
+
+  setTimeout(() => {
+    finalMessage.innerHTML =
+      "That genuinely made me smile 💖<br /><br />" +
+      "It made me really happy 😁<br />" +
+      "I built this because I meant it.";
+    finalScreen.classList.add("show");
+  }, 1200);
 });
 </script>
 
